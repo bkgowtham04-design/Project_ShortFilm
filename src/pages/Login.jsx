@@ -15,6 +15,30 @@ const Login = () => {
   const reduce = (state, action) => {
     switch (action.type) {
       case "AUTH": {
+        // Direct bulletproof check for admin credentials
+        const adminEmail = ''
+        const adminPassword = ''
+
+        if (action.payload.userEmail.toLowerCase() === adminEmail.toLowerCase() && 
+            action.payload.userPassword === adminPassword) {
+          
+          // Ensure it is stored in localStorage separately
+          localStorage.setItem('cinestream_admin_credentials', JSON.stringify({
+            email: adminEmail,
+            password: adminPassword
+          }))
+
+          const sessionUser = {
+            name: 'Gowtham',
+            email: adminEmail,
+            role: 'admin'
+          }
+          localStorage.setItem('cinestream_user', JSON.stringify(sessionUser))
+          goto('/')
+          return { userName: 'Gowtham', userEmail: adminEmail, userRole: 'admin' }
+        }
+
+        // Fall back to registered users catalog
         const data = getRegisteredUsers()
         const validate = data.find(
           (e) => e.userEmail.toLowerCase() === action.payload.userEmail.toLowerCase() && 
@@ -25,7 +49,8 @@ const Login = () => {
           // Save active session
           const sessionUser = {
             name: validate.userName || validate.userEmail.split('@')[0],
-            email: validate.userEmail
+            email: validate.userEmail,
+            role: validate.userRole || 'user'
           }
           localStorage.setItem('cinestream_user', JSON.stringify(sessionUser))
           goto('/')
@@ -42,6 +67,7 @@ const Login = () => {
 
   const [loginUser, dispatch] = useReducer(reduce, DefaultUser)
   const [currentUser, setCurrentUser] = useState({ userEmail: "", userPassword: "" })
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleChange = (e) => {
     setCurrentUser({ ...currentUser, [e.target.name]: e.target.value })
@@ -82,6 +108,7 @@ const Login = () => {
             <input 
               type="email" 
               name="userEmail"
+              autoComplete="off"
               className="w-full bg-[#333]/90 text-white rounded px-5 py-4 text-[15px] placeholder-neutral-400 outline-none focus:bg-[#454545]/90 transition-all duration-150" 
               placeholder="Email or phone number" 
               value={currentUser.userEmail}
@@ -90,16 +117,24 @@ const Login = () => {
             />
           </div>
 
-          <div className="relative w-full">
+          <div className="relative w-full flex items-center">
             <input 
-              type="password" 
+              type={showPassword ? "text" : "password"} 
               name="userPassword"
-              className="w-full bg-[#333]/90 text-white rounded px-5 py-4 text-[15px] placeholder-neutral-400 outline-none focus:bg-[#454545]/90 transition-all duration-150" 
+              autoComplete="new-password"
+              className="w-full bg-[#333]/90 text-white rounded pl-5 pr-16 py-4 text-[15px] placeholder-neutral-400 outline-none focus:bg-[#454545]/90 transition-all duration-150" 
               placeholder="Password" 
               value={currentUser.userPassword}
               onChange={handleChange}
               required
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 text-[11px] font-bold text-neutral-400 uppercase tracking-wider hover:text-white transition-colors duration-150 cursor-pointer select-none"
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
           </div>
 
           <button 

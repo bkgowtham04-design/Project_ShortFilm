@@ -61,26 +61,52 @@ const Navbar = ({ watchlistCount }) => {
         </Link>
         {user && (
           <ul className="flex items-center gap-5 list-none">
-            <li>
-              <Link 
-                to="/" 
-                className={`text-sm font-medium transition-all duration-150 relative py-1 ${
-                  isActive('/') ? 'text-white after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-cinema-red after:rounded after:shadow-[0_0_8px_#e50914]' : 'text-neutral-400 hover:text-white'
-                }`}
-              >
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link 
-                to="/watchlist" 
-                className={`text-sm font-medium transition-all duration-150 relative py-1 ${
-                  isActive('/watchlist') ? 'text-white after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-cinema-red after:rounded after:shadow-[0_0_8px_#e50914]' : 'text-neutral-400 hover:text-white'
-                }`}
-              >
-                Watchlist
-              </Link>
-            </li>
+            {user.role === 'admin' ? (
+              <li>
+                <Link 
+                  to="/" 
+                  className={`text-sm font-medium transition-all duration-150 relative py-1 ${
+                    isActive('/') ? 'text-white after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-cinema-red after:rounded after:shadow-[0_0_8px_#e50914]' : 'text-neutral-400 hover:text-white'
+                  }`}
+                >
+                  Admin Dashboard
+                </Link>
+              </li>
+            ) : user.role === 'director' ? (
+              <li>
+                <Link 
+                  to="/" 
+                  className={`text-sm font-medium transition-all duration-150 relative py-1 ${
+                    isActive('/') ? 'text-white after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-cinema-red after:rounded after:shadow-[0_0_8px_#e50914]' : 'text-neutral-400 hover:text-white'
+                  }`}
+                >
+                  Director Dashboard
+                </Link>
+              </li>
+            ) : (
+              <>
+                <li>
+                  <Link 
+                    to="/" 
+                    className={`text-sm font-medium transition-all duration-150 relative py-1 ${
+                      isActive('/') ? 'text-white after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-cinema-red after:rounded after:shadow-[0_0_8px_#e50914]' : 'text-neutral-400 hover:text-white'
+                    }`}
+                  >
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    to="/watchlist" 
+                    className={`text-sm font-medium transition-all duration-150 relative py-1 ${
+                      isActive('/watchlist') ? 'text-white after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-cinema-red after:rounded after:shadow-[0_0_8px_#e50914]' : 'text-neutral-400 hover:text-white'
+                    }`}
+                  >
+                    Watchlist
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         )}
       </div>

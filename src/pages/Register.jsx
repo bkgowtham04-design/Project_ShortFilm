@@ -24,9 +24,11 @@ const Register = () => {
   const [formData, setFormData] = useState({ 
     userName: '', 
     userEmail: '', 
-    userPassword: '' 
+    userPassword: '',
+    userRole: 'user'
   })
   const [error, setError] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -66,18 +68,11 @@ const Register = () => {
 
   return (
     <div 
-      className="flex flex-col items-center justify-center min-h-screen w-full p-5 relative bg-cover bg-center bg-fixed"
+      className="flex items-center justify-center min-h-screen w-full p-5 relative bg-cover bg-center"
       style={{
-        backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.3) 100%), url('/auth-bg.jpg')`
+        backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.8) 100%), url('/auth-bg.jpg')`
       }}
     >
-      {/* Floating Logo Header */}
-      <header className="absolute top-0 left-0 w-full px-[6%] py-6 z-20">
-        <span className="text-3xl font-black tracking-wider bg-gradient-to-r from-cinema-red to-[#ff4b55] bg-clip-text text-transparent select-none">
-          CINESTREAM
-        </span>
-      </header>
-
       {/* Dimmed Overlay */}
       <div className="absolute inset-0 bg-black/40 z-0"></div>
 
@@ -102,6 +97,7 @@ const Register = () => {
             <input 
               type="text" 
               name="userName"
+              autoComplete="off"
               className="w-full bg-[#333]/90 text-white rounded px-5 py-4 text-[15px] placeholder-neutral-400 outline-none focus:bg-[#454545]/90 transition-all duration-150" 
               placeholder="Full Name" 
               value={formData.userName}
@@ -114,6 +110,7 @@ const Register = () => {
             <input 
               type="email" 
               name="userEmail"
+              autoComplete="off"
               className="w-full bg-[#333]/90 text-white rounded px-5 py-4 text-[15px] placeholder-neutral-400 outline-none focus:bg-[#454545]/90 transition-all duration-150" 
               placeholder="Email address" 
               value={formData.userEmail}
@@ -122,16 +119,38 @@ const Register = () => {
             />
           </div>
 
-          <div className="relative w-full">
+          <div className="relative w-full flex items-center">
             <input 
-              type="password" 
+              type={showPassword ? "text" : "password"} 
               name="userPassword"
-              className="w-full bg-[#333]/90 text-white rounded px-5 py-4 text-[15px] placeholder-neutral-400 outline-none focus:bg-[#454545]/90 transition-all duration-150" 
+              autoComplete="new-password"
+              className="w-full bg-[#333]/90 text-white rounded pl-5 pr-16 py-4 text-[15px] placeholder-neutral-400 outline-none focus:bg-[#454545]/90 transition-all duration-150" 
               placeholder="Password" 
               value={formData.userPassword}
               onChange={handleChange}
               required
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 text-[11px] font-bold text-neutral-400 uppercase tracking-wider hover:text-white transition-colors duration-150 cursor-pointer select-none"
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
+          </div>
+
+          {/* Role selection dropdown */}
+          <div className="flex flex-col gap-2">
+            <label className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider pl-1">Designation / Role</label>
+            <select 
+              name="userRole"
+              className="w-full bg-[#333]/90 text-white rounded px-5 py-3.5 text-[15px] outline-none focus:bg-[#454545]/90 transition-all duration-150 cursor-pointer"
+              value={formData.userRole}
+              onChange={handleChange}
+            >
+              <option value="user">User (Viewer)</option>
+              <option value="director">Director (Creator)</option>
+            </select>
           </div>
 
           <button 
